@@ -1,0 +1,30 @@
+import nodemailer from "nodemailer";
+export const sendMail = async ({
+  to,
+  subject = "No Reply",
+  textMessage = "",
+  htmlMessage = "",
+}) => {
+  // config email transporter
+  const transporter = nodemailer.createTransport({
+    host: "localhost",
+    port: process.env.MAIL_PORT,
+    secure: false, // Use `true` for port 465, `false` for all other ports
+    auth: {
+      user: process.env.MAil_AUTH,
+      pass: process.env.MAIL_PASS,
+    },
+    service: "gmail",
+  });
+
+  console.log(textMessage);
+  const info = await transporter.sendMail({
+    from: '"Ecommerce App"<mh0649546@gmail.com>', // sender address
+    to, // list of receivers
+    subject, // Subject line
+    text: textMessage, // plain text body
+    html: htmlMessage,
+  });
+
+  return info;
+};
