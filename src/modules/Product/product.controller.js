@@ -95,21 +95,21 @@ export const createProduct = asyncHandller(async (req, res, next) => {
   });
 });
 
-export const getProducts = asyncHandller(async (req, res, next) => {
-  const apiFeatures = new ApiFeatures(Product.find(), req.query)
-    .pagination()
-    .filter()
-    .search()
-    .sort()
-    .select();
+// export const getProducts = asyncHandller(async (req, res, next) => {
+//   const apiFeatures = new ApiFeatures(Product.find(), req.query)
+//     .pagination()
+//     .filter()
+//     .search()
+//     .sort()
+//     .select();
 
-  let products = await apiFeatures.mongooseQury;
-  res.status(200).json({
-    status: "success",
+//   let products = await apiFeatures.mongooseQury;
+//   res.status(200).json({
+//     status: "success",
 
-    products,
-  });
-});
+//     products,
+//   });
+// });
 
 export const updateProduct = asyncHandller(async (req, res, next) => {
   const {
