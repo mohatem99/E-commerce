@@ -1,5 +1,5 @@
 export const extenstions = {
-  Images: ["image/png", "image/jpeg"],
+  Images: ["image/png", "image/jpeg", "image/jfif"],
 
   Videos: ["Video/mp4"],
   Documents: ["application/pdf"],

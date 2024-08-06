@@ -50,6 +50,8 @@ export const createReview = asyncHandller(async (req, res, next) => {
 export const deleteReview = asyncHandller(async (req, res, next) => {
   const { id } = req.params;
 
+  console.log(id);
+
   const review = await Review.findByOneAndDelete({
     _id: id,
     createdBy: req.user._id,

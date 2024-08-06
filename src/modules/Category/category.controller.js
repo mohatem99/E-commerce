@@ -22,7 +22,7 @@ export const createCategory = asyncHandller(async (req, res, next) => {
 
   const { secure_url, public_id } = await cloudinaryConfig().uploader.upload(
     req.file.path,
-    { folder: `E-commerce/categories/${customId}` }
+    { folder: `E-commerce/Categories/${customId}` }
   );
 
   const category = await Category.create({
@@ -40,15 +40,18 @@ export const createCategory = asyncHandller(async (req, res, next) => {
 
 export const updateCategory = asyncHandller(async (req, res, next) => {
   const { name } = req.body;
+
   const { id } = req.params;
   const category = await Category.findOne({ _id: id, createdBy: req.user._id });
 
   if (!category) {
-    return next(new ApiError("Category not exist", 404));
+    return next(
+      new ApiError("Category not exist or you don have permission", 404)
+    );
   }
 
   if (name) {
-    if (name.toLowerCase() === category.name) {
+    if (name.toLowerCase() == category.name) {
       return next(new ApiError("name should be different", 404));
     }
 
@@ -57,17 +60,19 @@ export const updateCategory = asyncHandller(async (req, res, next) => {
   }
 
   if (req.file) {
+    // delete the saved image
     await cloudinaryConfig().uploader.destroy(category.image.public_id);
-
+    //save the new image
     const { public_id, secure_url } = await cloudinaryConfig().uploader.upload(
       req.file.path,
       {
-        folder: `E-commerce/categories/${category.customId}`,
+        folder: `E-commerce/Categories/${category.customId}`,
       }
     );
 
     category.image = { public_id, secure_url };
   }
+  await category.save();
 
   res.status(201).json({
     status: "success",
@@ -89,13 +94,25 @@ export const deleteCategory = asyncHandller(async (req, res, next) => {
 
   await SubCategory.deleteMany({ category: category._id });
   await cloudinaryConfig().api.delete_resources_by_prefix(
-    `E-commerce/categories/${category.customId}`
+    `E-commerce/Categories/${category.customId}`
   );
   await cloudinaryConfig().api.delete_folder(
-    `E-commerce/categories/${category.customId}`
+    `E-commerce/Categories/${category.customId}`
   );
   res.status(200).json({
     status: "sucess",
     msg: "done",
+  });
+});
+
+export const getCategories = asyncHandller(async (req, res, next) => {
+  const categories = await Category.find().populate([
+    {
+      path: "SubCategories",
+    },
+  ]);
+  res.status(200).json({
+    status: "success",
+    data: categories,
   });
 });

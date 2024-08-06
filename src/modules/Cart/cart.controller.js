@@ -29,15 +29,16 @@ export const createCart = asyncHandller(async (req, res, next) => {
     });
   }
 
-  let flag = true;
+  let flag = false;
   for (let product of cartExist.products) {
-    if ((productId = product.productId)) {
+    if (productId == product.productId) {
       product.quantity = quantity;
       flag = true;
     }
   }
 
   if (!flag) {
+    console.log("hi");
     cartExist.products.push({
       productId,
       quantity,
@@ -84,5 +85,15 @@ export const removeCart = asyncHandller(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     cart: cartExist,
+  });
+});
+export const getCart = asyncHandller(async (req, res, next) => {
+  console.log(req.user);
+
+  const cart = await Cart.find({ user: req.user._id });
+
+  res.status(200).json({
+    status: "success",
+    cart,
   });
 });

@@ -1,6 +1,6 @@
 import Coupon from "../../../db/models/coupon.model.js";
 import { asyncHandller } from "../../middlewares/errorHandling.js";
-
+import ApiError from "../../utils/errorClass.js";
 export const createCoupon = asyncHandller(async (req, res, next) => {
   const { code, amount, fromDate, toDate } = req.body;
 
@@ -17,11 +17,11 @@ export const createCoupon = asyncHandller(async (req, res, next) => {
     amount,
     fromDate,
     toDate,
-    createdBy: req.use._id,
+    createdBy: req.user._id,
   });
   res.status(201).json({
     status: "success",
-    message: "done",
+    coupon,
   });
 });
 export const updateCoupon = asyncHandller(async (req, res, next) => {

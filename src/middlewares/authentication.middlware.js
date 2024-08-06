@@ -22,7 +22,7 @@ const auth = () => {
 
     const currentUser = await User.findById(decoded.userId);
 
-    if (currentUser.passwordChangedAt) {
+    if (currentUser?.passwordChangedAt) {
       const passChangedTimestamp = parseInt(
         currentUser.passwordChangedAt.getTime() / 1000,
         10

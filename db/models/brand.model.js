@@ -30,6 +30,17 @@ const brandSchema = new Schema(
       public_id: String,
       secure_url: String,
     },
+
+    category: {
+      type: Types.ObjectId,
+      required: true,
+      ref: "Category",
+    },
+    subCategory: {
+      type: Types.ObjectId,
+      required: true,
+      ref: "SubCategory",
+    },
   },
   { timestamps: true, versionKey: false }
 );

@@ -31,8 +31,13 @@ const categorySchema = new Schema(
       secure_url: String,
     },
   },
-  { timestamps: true, versionKey: false }
+  { timestamps: true, versionKey: false, toJSON: { virtuals: true } }
 );
+categorySchema.virtual("SubCategories", {
+  ref: "SubCategory",
+  localField: "_id",
+  foreignField: "category",
+});
 
 const Category = model("Category", categorySchema);
 export default Category;

@@ -4,6 +4,7 @@ export const sendMail = async ({
   subject = "No Reply",
   textMessage = "",
   htmlMessage = "",
+  attachments,
 }) => {
   // config email transporter
   const transporter = nodemailer.createTransport({
@@ -24,6 +25,7 @@ export const sendMail = async ({
     subject, // Subject line
     text: textMessage, // plain text body
     html: htmlMessage,
+    attachments,
   });
 
   return info;

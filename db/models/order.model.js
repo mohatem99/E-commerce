@@ -16,10 +16,12 @@ const orderSchema = new Schema(
 
         price: { type: Number, required: true },
         finalPrice: { type: Number, required: true },
+        discount: { type: Number, min: 1, nax: 100 },
       },
     ],
 
     subPrice: { type: Number, required: true },
+    totalPrice: { type: Number, required: true },
     couponId: {
       type: Types.ObjectId,
       ref: "Coupon",

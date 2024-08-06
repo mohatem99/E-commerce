@@ -17,4 +17,6 @@ export const globalResponse = (err, req, res, next) => {
     message: err.message,
     stack: err.stack,
   });
+
+  next();
 };
