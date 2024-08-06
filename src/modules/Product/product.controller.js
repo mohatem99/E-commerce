@@ -8,7 +8,7 @@ import SubCategory from "../../../db/models/subCategory.model.js";
 import ApiError from "../../utils/errorClass.js";
 import Product from "../../../db/models/product.model.js";
 import { cloudinaryConfig } from "../../utils/cloudinary.utils.js";
-import { ApiFeatures } from "../../utils/apifeatures.js";
+// import { ApiFeatures } from "../../utils/apifeatures.js";
 
 export const createProduct = asyncHandller(async (req, res, next) => {
   const {
