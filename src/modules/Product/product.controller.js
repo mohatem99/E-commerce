@@ -8,7 +8,7 @@ import SubCategory from "../../../db/models/subCategory.model.js";
 import ApiError from "../../utils/errorClass.js";
 import Product from "../../../db/models/product.model.js";
 import { cloudinaryConfig } from "../../utils/cloudinary.utils.js";
-// import { ApiFeatures } from "../../utils/apifeatures.js";
+import { ApiFeatures } from "../../utils/apifeatures.js";
 
 export const createProduct = asyncHandller(async (req, res, next) => {
   const {
@@ -95,21 +95,21 @@ export const createProduct = asyncHandller(async (req, res, next) => {
   });
 });
 
-// export const getProducts = asyncHandller(async (req, res, next) => {
-//   const apiFeatures = new ApiFeatures(Product.find(), req.query)
-//     .pagination()
-//     .filter()
-//     .search()
-//     .sort()
-//     .select();
+export const getProducts = asyncHandller(async (req, res, next) => {
+  const apiFeatures = new ApiFeatures(Product.find(), req.query)
+    .pagination()
+    .filter()
+    .search()
+    .sort()
+    .select();
 
-//   let products = await apiFeatures.mongooseQury;
-//   res.status(200).json({
-//     status: "success",
+  let products = await apiFeatures.mongooseQury;
+  res.status(200).json({
+    status: "success",
 
-//     products,
-//   });
-// });
+    products,
+  });
+});
 
 export const updateProduct = asyncHandller(async (req, res, next) => {
   const {
