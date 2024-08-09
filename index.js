@@ -18,12 +18,15 @@ import couponRoutes from "./src/modules/Coupon/coupon.routes.js";
 import ordersRoutes from "./src/modules/Order/order.routes.js";
 import { deleteFromCloudinary } from "./src/utils/deleteFromCloudinary.js";
 import { deleteFromDb } from "./src/utils/deleteFromDb.js";
+import { webHook } from "./src/modules/Order/order.controller.js";
 
 config();
 
 connectionDb();
 const app = express();
 app.use(cors());
+
+app.post("/orders/webhook", express.raw({ type: "application/json" }), webHook);
 
 app.use((req, res, next) => {
   if (req.originalUrl == "/orders/webhook") {
