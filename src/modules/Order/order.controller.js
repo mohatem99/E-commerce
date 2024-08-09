@@ -185,7 +185,7 @@ export const webHook = asyncHandller(async (req, res, next) => {
       process.env.ENDPONIT_SECRET
     );
   } catch (err) {
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+    return res.status(400).json(`Webhook Error: ${err.message}`);
   }
   if (event.type !== "checkout.session.completed") {
     const { orderId } = event.data.object.metadata;
