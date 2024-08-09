@@ -29,7 +29,7 @@ app.use((req, res, next) => {
   if (req.originalUrl == "/orders/webhook") {
     next();
   } else {
-    express.json();
+    express.json()(req, res, next);
   }
 });
 app.use(express.json());
