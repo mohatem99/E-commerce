@@ -196,7 +196,7 @@ export const webHook = asyncHandller(async (req, res, next) => {
   }
   const { orderId } = event.data.object.metadata;
   await Order.findOneAndUpdate({ _id: orderId }, { status: "placed" });
-  return res.status(400).json({
+  return res.status(200).json({
     msg: "done",
   });
 });
