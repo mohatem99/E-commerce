@@ -176,7 +176,7 @@ export const webHook = asyncHandller(async (req, res, next) => {
   const stripe = new Stripe(process.env.STRIP_KEY);
   const sig = req.headers["stripe-signature"];
 
-  console.log(req.body);
+  const body = req.body;
   let event;
 
   try {
@@ -186,7 +186,7 @@ export const webHook = asyncHandller(async (req, res, next) => {
       process.env.ENDPONIT_SECRET
     );
   } catch (err) {
-    return res.status(400).json(`Webhook Error: ${err.message}`);
+    return res.status(400).json(`Webhook Error: ${err.message},${body}`);
   }
   if (event.type !== "checkout.session.completed") {
     const { orderId } = event.data.object.metadata;
