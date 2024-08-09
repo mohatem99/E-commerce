@@ -27,7 +27,6 @@ app.use(cors());
 
 app.use((req, res, next) => {
   if (req.originalUrl == "/orders/webhook") {
-    console.log(req);
     next();
   } else {
     express.json();
