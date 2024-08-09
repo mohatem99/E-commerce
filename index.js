@@ -26,7 +26,7 @@ connectionDb();
 const app = express();
 app.use(cors());
 
-app.post("/orders/webhook", express.raw({ type: "application/json" }), webHook);
+// app.post("/orders/webhook", express.raw({ type: "application/json" }), webHook);
 
 app.use((req, res, next) => {
   if (req.originalUrl == "/orders/webhook") {
@@ -36,7 +36,6 @@ app.use((req, res, next) => {
     express.json()(req, res, next);
   }
 });
-app.use(express.json());
 
 app.get("/", (req, res, next) => {
   res.status(200).json({ status: "success", msg: "Hello on my Project 😘" });
