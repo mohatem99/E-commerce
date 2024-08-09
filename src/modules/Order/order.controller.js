@@ -118,16 +118,16 @@ export const createOrder = asyncHandller(async (req, res, next) => {
     coupon: req.body?.coupon?.amount,
   };
 
-  await createInvoice(invoice, "invoice.pdf");
-  await sendMail({
-    to: req.user.email,
-    subject: "Order Placed",
-    textMessage: "Your Order has been placed successfully",
-    attachments: {
-      path: "invoice.pdf",
-      contentType: "application/pdf",
-    },
-  });
+  // await createInvoice(invoice, "invoice.pdf");
+  // await sendMail({
+  //   to: req.user.email,
+  //   subject: "Order Placed",
+  //   textMessage: "Your Order has been placed successfully",
+  //   attachments: {
+  //     path: "invoice.pdf",
+  //     contentType: "application/pdf",
+  //   },
+  // });
 
   if (paymentMethod == "card") {
     const stripe = new Stripe(process.env.STRIP_KEY);
