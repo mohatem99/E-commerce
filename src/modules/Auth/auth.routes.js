@@ -15,7 +15,7 @@ import {
   rfToken,
   forgetSchme,
   resetSchema,
-} from "./auth.Schema.js";
+} from "./auth.schema.js";
 
 const router = express.Router();
 
