@@ -1,3 +1,5 @@
+import ApiError from "../utils/errorClass.js";
+
 const reqKeys = ["body", "query", "params", "headers", "file", "files"];
 
 /**

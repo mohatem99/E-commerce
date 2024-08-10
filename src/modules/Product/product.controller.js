@@ -8,7 +8,7 @@ import SubCategory from "../../../db/models/subCategory.model.js";
 import ApiError from "../../utils/errorClass.js";
 import Product from "../../../db/models/product.model.js";
 import { cloudinaryConfig } from "../../utils/cloudinary.utils.js";
-// import { ApiFeatures } from "../../utils/apifeatures.js";
+import { ApiFeatures } from "../../utils/apifeatures.js";
 
 export const createProduct = asyncHandller(async (req, res, next) => {
   const {
@@ -26,12 +26,12 @@ export const createProduct = asyncHandller(async (req, res, next) => {
   if (!categoryExist) {
     return next(new ApiError("category not exist", 404));
   }
-  console.log(categoryExist);
+
   const subCategoryExist = await SubCategory.findOne({
     _id: subCategory,
     category,
   });
-  console.log(subCategoryExist);
+
   if (!subCategoryExist) {
     return next(new ApiError("subCategory not exist", 404));
   }
@@ -95,33 +95,25 @@ export const createProduct = asyncHandller(async (req, res, next) => {
   });
 });
 
-// export const getProducts = asyncHandller(async (req, res, next) => {
-//   const apiFeatures = new ApiFeatures(Product.find(), req.query)
-//     .pagination()
-//     .filter()
-//     .search()
-//     .sort()
-//     .select();
+export const getProducts = asyncHandller(async (req, res, next) => {
+  console.log(req.query);
+  const apiFeatures = new ApiFeatures(Product.find(), req.query)
+    .pagination()
+    .filter()
+    .search()
+    .sort()
+    .select();
 
-//   let products = await apiFeatures.mongooseQury;
-//   res.status(200).json({
-//     status: "success",
+  let products = await apiFeatures.mongooseQury;
+  res.status(200).json({
+    status: "success",
 
-//     products,
-//   });
-// });
+    products,
+  });
+});
 
 export const updateProduct = asyncHandller(async (req, res, next) => {
-  const {
-    title,
-    price,
-    stock,
-    discount,
-    description,
-    category,
-    subCategory,
-    brand,
-  } = req.body;
+  const { title, price, stock, discount, description } = req.body;
 
   const { id } = req.params;
 
@@ -129,12 +121,12 @@ export const updateProduct = asyncHandller(async (req, res, next) => {
   if (!categoryExist) {
     return next(new ApiError("category not exist", 404));
   }
-  console.log(categoryExist);
+
   const subCategoryExist = await SubCategory.findOne({
     _id: subCategory,
     category,
   });
-  console.log(subCategoryExist);
+
   if (!subCategoryExist) {
     return next(new ApiError("subCategory not exist", 404));
   }

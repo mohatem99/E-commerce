@@ -54,7 +54,6 @@ export const updateSubCategory = asyncHandller(async (req, res, next) => {
 
   const subCategory = await SubCategory.findById(id).populate("category");
 
-  console.log(subCategory);
   if (!subCategory) {
     return next(new ApiError("Subcategory not exist ", 404));
   }
@@ -79,6 +78,36 @@ export const updateSubCategory = asyncHandller(async (req, res, next) => {
 
   await subCategory.save();
   res.status(200).json({ status: "success", data: subCategory });
+});
+
+export const deleteSubCategory = asyncHandller(async (req, res, next) => {
+  const { id } = req.params;
+
+  const subCategory = await SubCategory.findByIdAndDelete(id).populate(
+    "category"
+  );
+
+  if (!subCategory) {
+    return next(new ApiError("subCategory not found", 404));
+  }
+
+  const subcategoryPath = `E-commerce/Categories/${subCategory.category.customId}/SubCategories/${subCategory.customId}`;
+
+  // delete the related brands from db
+  const deletedBrands = await Brand.deleteMany({
+    subCategory: subCategory._id,
+  });
+  if (deletedBrands.deletedCount) {
+    // delete the related products from db
+    await Product.deleteMany({ subCategory: subCategory._id });
+  }
+  await cloudinaryConfig().api.delete_resources_by_prefix(subcategoryPath);
+  await cloudinaryConfig().api.delete_folder(subcategoryPath);
+
+  res.status(200).json({
+    status: "success",
+    message: "SubCategory deleted successfully",
+  });
 });
 export const getSubCategories = asyncHandller(async (req, res, next) => {
   const subCategories = await SubCategory.find();

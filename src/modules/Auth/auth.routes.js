@@ -1,20 +1,48 @@
 import express from "express";
-import { confirmEmail, signIn, signUp } from "./auth.controller.js";
-import { cloudinaryConfig } from "../../utils/cloudinary.utils.js";
+import {
+  confirmEmail,
+  forpgetPassword,
+  resetPassword,
+  signIn,
+  signUp,
+  refreshToken,
+} from "./auth.controller.js";
+import { validationMiddleware } from "../../middlewares/validation.middleware.js";
+import {
+  signUpSchema,
+  sigInSchema,
+  confirmMail,
+  rfToken,
+  forgetSchme,
+  resetSchema,
+} from "./auth.Schema.js";
 
 const router = express.Router();
 
-router.post("/signup", signUp);
+router.post("/signup", validationMiddleware(signUpSchema), signUp);
 
-router.post("/signin", signIn);
-router.get("/confirm-email", confirmEmail);
+router.post("/signin", validationMiddleware(sigInSchema), signIn);
+router.get(
+  "/confirm-email/:token",
+  validationMiddleware(confirmMail),
+  confirmEmail
+);
+router.get(
+  "/refresh-token/:rfToken",
+  validationMiddleware(rfToken),
+  refreshToken
+);
 
-router.get("/test", async (req, res) => {
-  const data = await cloudinaryConfig().uploader.upload(
-    "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-    { folder: "general" }
-  );
-  res.json({ data });
-});
+router.post(
+  "/forget-password",
+  validationMiddleware(forgetSchme),
+  forpgetPassword
+);
+
+router.post(
+  "/reset-password",
+  validationMiddleware(resetSchema),
+  resetPassword
+);
 
 export default router;

@@ -13,12 +13,13 @@ import brandRoutes from "./src/modules/Brand/brand.routes.js";
 
 import productRoutes from "./src/modules/Product/product.routes.js";
 import cartRoutes from "./src/modules/Cart/cart.routes.js";
-
+import ApiError from "./src/utils/errorClass.js";
 import couponRoutes from "./src/modules/Coupon/coupon.routes.js";
 import ordersRoutes from "./src/modules/Order/order.routes.js";
 import { deleteFromCloudinary } from "./src/utils/deleteFromCloudinary.js";
+
+import reviewRoutes from "./src/modules/Review/review.routes.js";
 import { deleteFromDb } from "./src/utils/deleteFromDb.js";
-import { webHook } from "./src/modules/Order/order.controller.js";
 
 config();
 
@@ -26,11 +27,8 @@ connectionDb();
 const app = express();
 app.use(cors());
 
-// app.post("/orders/webhook", express.raw({ type: "application/json" }), webHook);
-
 app.use((req, res, next) => {
   if (req.originalUrl == "/orders/webhook") {
-    express.raw({ type: "application/json" });
     next();
   } else {
     express.json()(req, res, next);
@@ -51,6 +49,13 @@ app.use("/carts", cartRoutes);
 app.use("/coupons", couponRoutes);
 
 app.use("/orders", ordersRoutes);
+
+app.use("/reviews", reviewRoutes);
+
+app.use("*", (req, res, next) => {
+  return next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
+});
+
 app.use(globalResponse, deleteFromCloudinary, deleteFromDb);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`server up and running on port ${PORT}`));

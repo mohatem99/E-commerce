@@ -185,61 +185,60 @@ export const webHook = asyncHandller(async (req, res, next) => {
       process.env.ENDPONIT_SECRET
     );
   } catch (err) {
-    return res.status(400).json(`Webhook Error: ${err.message},${req.body}`);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
   if (event.type !== "checkout.session.completed") {
     const { orderId } = event.data.object.metadata;
     await Order.findOneAndUpdate({ _id: orderId }, { status: "rejected" });
-    return res.status(400).json({
+    res.status(400).json({
       msg: "fail",
     });
   }
   const { orderId } = event.data.object.metadata;
   await Order.findOneAndUpdate({ _id: orderId }, { status: "placed" });
-  return res.status(200).json({
+  res.status(200).json({
     msg: "done",
   });
 });
 export const cancelOrder = asyncHandller(async (req, res, next) => {
-  // const { id } = req.params;
-  // const { reason } = req.body;
+  const { id } = req.params;
+  const { reason } = req.body;
 
-  // const order = await Order.findOne({ _id: id, user: req.user._id });
-  // if (!order) {
-  //   return next(new ApiError("order not found ", 404));
-  // }
-  // if (
-  //   (order.paymentMethod == "cash" && order.status != "placed") ||
-  //   (order.paymentMethod == "card" && order.status != "waitPayment")
-  // ) {
-  //   return next(new ApiError("you cannont cancel this order", 404));
-  // }
+  const order = await Order.findOne({ _id: id, user: req.user._id });
+  if (!order) {
+    return next(new ApiError("order not found ", 404));
+  }
+  if (
+    (order.paymentMethod == "cash" && order.status != "placed") ||
+    (order.paymentMethod == "card" && order.status != "waitPayment")
+  ) {
+    return next(new ApiError("you cannont cancel this order", 404));
+  }
 
-  // await Order.updateOne(
-  //   {
-  //     _id: id,
-  //   },
-  //   { status: "cancelled", cancelledBy: req.user_id, reason }
-  // );
+  await Order.updateOne(
+    {
+      _id: id,
+    },
+    { status: "cancelled", cancelledBy: req.user_id, reason }
+  );
 
-  // if (order?.coupon) {
-  //   await Coupon.updateOne(
-  //     { _id: order?.couponId },
-  //     {
-  //       $pull: { usedBy: req.user._id },
-  //     }
-  //   );
-  // }
+  if (order?.coupon) {
+    await Coupon.updateOne(
+      { _id: order?.couponId },
+      {
+        $pull: { usedBy: req.user._id },
+      }
+    );
+  }
 
-  // for (let product of order.products) {
-  //   await Product.updateOne(
-  //     { _id: product.productId },
-  //     {
-  //       $inc: { stock: product.quantity },
-  //     }
-  //   );
-  // }
-  createIn;
+  for (let product of order.products) {
+    await Product.updateOne(
+      { _id: product.productId },
+      {
+        $inc: { stock: product.quantity },
+      }
+    );
+  }
 
   res.status(200).json({
     status: "success",

@@ -92,7 +92,20 @@ export const deleteCategory = asyncHandller(async (req, res, next) => {
     );
   }
 
-  await SubCategory.deleteMany({ category: category._id });
+  // delere relivant subcategories from db
+  const deletedSubCategories = await SubCategory.deleteMany({
+    category: category._id,
+  });
+  // check if subcategories are deleted already
+  if (deletedSubCategories.deletedCount) {
+    // delete the relivant brands from db
+    const deletedBrands = await Brand.deleteMany({ category: category._id });
+    if (deletedBrands.deletedCount) {
+      // delete the related products from db
+      await Product.deleteMany({ category: category._id });
+    }
+  }
+
   await cloudinaryConfig().api.delete_resources_by_prefix(
     `E-commerce/Categories/${category.customId}`
   );

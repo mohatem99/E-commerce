@@ -38,6 +38,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    otp: String,
+    passwordChangedAt: Date,
+    passwordResetExpires: Date,
+    passwordResetVerified: Boolean,
 
     role: {
       type: String,

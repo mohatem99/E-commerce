@@ -13,7 +13,7 @@ export class ApiFeatures {
 
   filter() {
     const excludeQuery = ["page", "sort", "search", "select"];
-    let filterObj = { ...req.query };
+    let filterObj = { ...this.queryString };
     excludeQuery.forEach((el) => delete filterObj[el]);
 
     filterObj = JSON.parse(

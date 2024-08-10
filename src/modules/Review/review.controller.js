@@ -1,11 +1,13 @@
-import Order from "../../../db/models/order.model";
-import Product from "../../../db/models/product.model";
-import Review from "../../../db/models/review.model";
-import { asyncHandller } from "../../middlewares/errorHandling";
-import ApiError from "../../utils/errorClass";
+import Order from "../../../db/models/order.model.js";
+import Product from "../../../db/models/product.model.js";
+import Review from "../../../db/models/review.model.js";
+import { asyncHandller } from "../../middlewares/errorHandling.js";
+import ApiError from "../../utils/errorClass.js";
 
 export const createReview = asyncHandller(async (req, res, next) => {
-  const { comment, rate, productId } = req.body;
+  console.log("hiiiiiiiiii");
+  const { productId } = req.params;
+  const { comment, rate } = req.body;
   const product = await Product.findById(productId);
   if (!product) {
     return next(new ApiError("product not found", 404));
@@ -15,7 +17,7 @@ export const createReview = asyncHandller(async (req, res, next) => {
     createdBy: req.user._id,
     productId,
   });
-  if (!reviewExist) {
+  if (reviewExist) {
     return next(new ApiError("you are already reviewed", 404));
   }
 

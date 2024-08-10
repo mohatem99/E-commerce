@@ -4,7 +4,7 @@ export const sendMail = async ({
   subject = "No Reply",
   textMessage = "",
   htmlMessage = "",
-  attachments,
+  attachments = "",
 }) => {
   // config email transporter
   const transporter = nodemailer.createTransport({
@@ -18,7 +18,6 @@ export const sendMail = async ({
     service: "gmail",
   });
 
-  console.log(textMessage);
   const info = await transporter.sendMail({
     from: '"Ecommerce App"<mh0649546@gmail.com>', // sender address
     to, // list of receivers

@@ -1,7 +1,7 @@
-import Product from "../../../db/models/product.model";
-import WhishList from "../../../db/models/whishList.model";
-import { asyncHandller } from "../../middlewares/errorHandling";
-import ApiError from "../../utils/errorClass";
+import Product from "../../../db/models/product.model.js";
+import WhishList from "../../../db/models/whishList.model.js";
+import { asyncHandller } from "../../middlewares/errorHandling.js";
+import ApiError from "../../utils/errorClass.js";
 
 export const createWishList = asyncHandller(async (req, res, next) => {
   const { proudctId } = req.params;

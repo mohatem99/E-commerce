@@ -7,9 +7,10 @@ import { extenstions } from "../../utils/file-extensions.utils.js";
 import slugify from "slugify";
 import Category from "../../../db/models/category.model.js";
 import SubCategory from "../../../db/models/subCategory.model.js";
+import Product from "../../../db/models/product.model.js";
 export const createBrand = asyncHandller(async (req, res, next) => {
   const { name, category, subCategory } = req.body;
-  console.log(category, subCategory);
+
   const isSubcategoryExist = await SubCategory.findOne({
     _id: subCategory,
     category,
@@ -63,7 +64,7 @@ export const getBrand = asyncHandller(async (req, res, next) => {
 export const updateBrand = asyncHandller(async (req, res, next) => {
   const { id } = req.params;
   const { name } = req.body;
-  console.log(id);
+
   const brand = await Brand.findOne({
     _id: id,
     createdBy: req.user._id,
@@ -97,5 +98,35 @@ export const updateBrand = asyncHandller(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: brand,
+  });
+});
+
+export const deleteBrand = asyncHandller(async (req, res, next) => {
+  const { id } = req.params;
+
+  const brand = await Brand.findByIdAndDelete(id)
+    .populate("category")
+    .populate("subCategory");
+
+  if (!brand) {
+    return next(new ApiError("Brand not found", 404));
+  }
+
+  const brandPath = `E-commerce/Categories/${brand.category.customId}/SubCategories/${brand.subCategory.customId}/Brands/${brand.customId}`;
+
+  // delete the related products from db
+  await Product.deleteMany({
+    brand: brand._id,
+  });
+
+  // delete the related products from db
+  await Product.deleteMany({ subCategory: subCategory._id });
+
+  await cloudinaryConfig().api.delete_resources_by_prefix(brandPath);
+  await cloudinaryConfig().api.delete_folder(brandPath);
+
+  res.status(200).json({
+    status: "success",
+    message: "Brand deleted successfully",
   });
 });
